@@ -13,6 +13,7 @@ jobs:
       DOCKER_REGISTRY: ${{ secrets.USERNAME }}
       IMAGE_NAME_FRONT: add-app-frontend
       IMAGE_NAME_BACK: add-app-backend
+      USER: /home/kosa
 
     steps:
     - name: Checkout Repository
@@ -55,7 +56,5 @@ jobs:
   
       - name: docker-compose에서 이미지 다운로드 및 실행 
         run: |
-          docker pull ${DOCKER_REGISTRY}/${IMAGE_NAME_FRONT}:latest
-          docker pull ${DOCKER_REGISTRY}/${IMAGE_NAME_BACK}:latest
-          cd /home/${{ secrets.REMOTE_USER }}add-app
+          cd ${{env.USER}}/add-app
           docker compose up -d
