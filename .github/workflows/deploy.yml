@@ -57,5 +57,5 @@ jobs:
         run: |
           docker pull ${DOCKER_REGISTRY}/${IMAGE_NAME_FRONT}:latest
           docker pull ${DOCKER_REGISTRY}/${IMAGE_NAME_BACK}:latest
-          cd /home/${{ secrets.REMOTE_USER }}/add-app
+          cd /home/${{ secrets.REMOTE_USER }}add-app
           docker compose up -d
