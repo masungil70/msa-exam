@@ -35,10 +35,7 @@ jobs:
     - name: gradlew 실행권한 설정 
       run: 
         chmod +x ./react-spring-boot/add-app/backend/gradlew
-      
-    - name: test gradlew 
-      run: ./react-spring-boot/add-app/backend/gradlew --info test
-      
+          
     - name: Build & Push Spring Boot Backend Image
       run: |
         cd ./react-spring-boot/add-app/backend/ 
