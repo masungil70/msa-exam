@@ -56,5 +56,5 @@ jobs:
   
       - name: docker-compose에서 이미지 다운로드 및 실행 
         run: |
-          cd ${{env.USER}}/add-app
+          cd ${USER}/add-app
           docker compose up -d
