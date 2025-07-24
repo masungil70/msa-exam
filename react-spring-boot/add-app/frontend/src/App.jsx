@@ -24,7 +24,7 @@ function App() {
 
   return (
     <div id="app">
-      <h1>React 기본 앱</h1>
+      <h1>React 기본 앱 - 덧셈</h1>
       <input
         type="number"
         value={num1}
