@@ -1,0 +1,51 @@
+name: Deploy React + Spring Boot App
+
+on:
+  push:
+    branches:
+      - main  # main 브랜치에 push될 때 실행
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      DOCKER_REGISTRY: ${{ github.repository }}
+      IMAGE_NAME_FRONT: ${{ github.repository }}-frontend
+      IMAGE_NAME_BACK: ${{ github.repository }}-backend
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    # 1. 로그인 
+    - name: docker hub login
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        
+    # 2. React(vite) 프론트 Docker 이미지 빌드 & 푸시
+    - name: Build & Push React Frontend Image
+      run: |
+        docker build -t $DOCKER_REGISTRY/${IMAGE_NAME_FRONT}:latest ./frontend
+        docker push $DOCKER_REGISTRY/${IMAGE_NAME_FRONT}:latest
+
+    # 3. Spring Boot 백엔드 Docker 이미지 빌드 & 푸시
+    - name: Build & Push Spring Boot Backend Image
+      run: |
+        docker build -t $DOCKER_REGISTRY/${IMAGE_NAME_BACK}:latest ./backend
+        docker push $DOCKER_REGISTRY/${IMAGE_NAME_BACK}:latest
+
+    # 4. 원격 서버로 배포 (옵션)
+    - name: Deploy on Remote Server via SSH
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.REMOTE_HOST }}
+        username: ${{ secrets.REMOTE_USER }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          docker pull $DOCKER_REGISTRY/${IMAGE_NAME_FRONT}:latest
+          docker pull $DOCKER_REGISTRY/${IMAGE_NAME_BACK}:latest
+          cd /home/${{ secrets.REMOTE_USER }}/add-app
+          docker compose up -d
