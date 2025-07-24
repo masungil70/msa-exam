@@ -28,8 +28,8 @@ jobs:
     # 2. React(vite) 프론트 Docker 이미지 빌드 & 푸시
     - name: Build & Push React Frontend Image
       run: |
-        docker build -t $DOCKER_REGISTRY/${IMAGE_NAME_FRONT}:latest ./react-spring-boot/add-app/frontend
-        docker push $DOCKER_REGISTRY/${IMAGE_NAME_FRONT}:latest
+        docker build -t ${DOCKER_REGISTRY}/${IMAGE_NAME_FRONT}:latest ./react-spring-boot/add-app/frontend
+        docker push ${DOCKER_REGISTRY}/${IMAGE_NAME_FRONT}:latest
 
     # 3. Spring Boot 백엔드 Docker 이미지 빌드 & 푸시
     - name: gradlew 실행권한 설정 
@@ -39,8 +39,8 @@ jobs:
     - name: Build & Push Spring Boot Backend Image
       run: |
         cd ./react-spring-boot/add-app/backend/ 
-        ./gradlew bootBuildImage --imageName=$DOCKER_REGISTRY/${IMAGE_NAME_BACK}:latest   
-        docker push $DOCKER_REGISTRY/${IMAGE_NAME_BACK}:latest
+        ./gradlew bootBuildImage --imageName=${DOCKER_REGISTRY}/${IMAGE_NAME_BACK}:latest   
+        docker push ${DOCKER_REGISTRY}/${IMAGE_NAME_BACK}:latest
 
   # 4. 원격 서버로 배포 (옵션)
   deploy:
@@ -55,7 +55,7 @@ jobs:
   
       - name: docker-compose에서 이미지 다운로드 및 실행 
         run: |
-          docker pull $DOCKER_REGISTRY/${IMAGE_NAME_FRONT}:latest
-          docker pull $DOCKER_REGISTRY/${IMAGE_NAME_BACK}:latest
+          docker pull ${DOCKER_REGISTRY}/${IMAGE_NAME_FRONT}:latest
+          docker pull ${DOCKER_REGISTRY}/${IMAGE_NAME_BACK}:latest
           cd /home/${{ secrets.REMOTE_USER }}/add-app
           docker compose up -d
