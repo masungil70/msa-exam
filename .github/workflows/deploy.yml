@@ -28,6 +28,7 @@ jobs:
     # 2. React(vite) 프론트 Docker 이미지 빌드 & 푸시
     - name: Build & Push React Frontend Image
       run: |
+        cd ./react-spring-boot/add-app/frontend
         docker build -t $DOCKER_REGISTRY/${IMAGE_NAME_FRONT}:latest ./react-spring-boot/add-app/frontend
         docker push $DOCKER_REGISTRY/${IMAGE_NAME_FRONT}:latest
 
