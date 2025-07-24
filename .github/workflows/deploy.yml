@@ -45,7 +45,7 @@ jobs:
   # 4. 원격 서버로 배포 (옵션)
   deploy:
       needs: build
-      runs-on: [ self-hosted, kosa-host ]
+      runs-on: [ self-hosted, kosa-label ]
       steps:
       - name: 운영서버에서 docker hub에 로그인 
         uses: docker/login-action@v1
