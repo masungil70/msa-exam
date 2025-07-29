@@ -42,11 +42,28 @@ jobs:
         ./gradlew bootBuildImage --imageName=${DOCKER_REGISTRY}/${IMAGE_NAME_BACK}:latest   
         docker push ${DOCKER_REGISTRY}/${IMAGE_NAME_BACK}:latest
 
+    # 4. 특정 폴더를 'my-artifact'라는 이름의 아티팩트로 업로드합니다.
+    - name: add_app 폴더에 docker-compose.yml과 nginx.conf 파일 복사하여 host로 업로드
+      uses: actions/upload-artifact@v4
+      with:
+        name: artifact_add_app  # 아티팩트 이름 (자유롭게 지정)
+        path: |
+          ./react-spring-boot/add-app/docker-compose.yml  # 복사하려는 특정 파일 
+          ./react-spring-boot/add-app/nginx  # 복사하려는 특정 폴더 경로
+
   # 4. 원격 서버로 배포 (옵션)
   deploy:
       needs: build
       runs-on: [ self-hosted, kosa-label ]
       steps:
+      # 'my-artifact'라는 이름의 아티팩트를 다운로드합니다.
+      #      기본적으로 현재 작업 디렉터리에 압축이 해제됩니다.
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: artifact_add_app # 'upload-artifact'에서 사용한 이름과 동일해야 합니다.
+          path: /home/kosa/add-app # (선택사항) 특정 폴더에 다운로드할 수도 있습니다.        
+        
       - name: 운영서버에서 docker hub에 로그인 
         uses: docker/login-action@v1
         with:
@@ -56,4 +73,4 @@ jobs:
       - name: docker-compose에서 이미지 다운로드 및 실행 
         run: |
           cd /home/kosa/add-app
-          docker compose up -d
+          docker compose up -d backend vue-nginx

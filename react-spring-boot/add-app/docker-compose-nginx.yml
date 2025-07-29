@@ -2,17 +2,19 @@
 
 services:
   backend:
-    image: masungil/add-app-backend:latest
+    image: backend:0.0.1
     container_name: backend
     networks:
       - app-network
 
   nginx:
-    image: masungil/add-app-frontend:latest
+    image: nginx
     container_name: vue-nginx
+    platform: linux/amd64
     ports:
       - "80:80"
     volumes:
+      - ./frontend/dist:/usr/share/nginx/html:ro 
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
     networks:
       - app-network
