@@ -73,4 +73,4 @@ jobs:
       - name: docker-compose에서 이미지 다운로드 및 실행 
         run: |
           cd /home/kosa/add-app
-          docker compose up -d backend vue-nginx
+          docker compose up -d backend nginx
